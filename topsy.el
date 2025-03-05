@@ -113,13 +113,14 @@ Return non-nil if the minor mode is enabled."
 ;;;; Functions
 
 (defun topsy--beginning-of-defun ()
-  "Return the line moved to by `beginning-of-defun'."
+  "Return the line moved to by `beginning-of-defun' when `(beginning-of-defun)' is non-nil"
   (when (> (window-start) 1)
     (save-excursion
       (goto-char (window-start))
-      (beginning-of-defun)
-      (font-lock-ensure (point) (pos-eol))
-      (buffer-substring (point) (pos-eol)))))
+      (let ((success (beginning-of-defun)))
+        (when success
+          (font-lock-ensure (point) (pos-eol))
+          (buffer-substring (point) (pos-eol)))))))
 
 (declare-function magit-current-section "magit-section" nil t)
 (declare-function magit-section-ident "magit-section" nil t)
